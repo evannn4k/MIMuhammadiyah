@@ -9,3 +9,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+    require __DIR__.'/dashboard.php';
+});

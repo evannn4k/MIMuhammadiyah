@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,12 +18,52 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $role = Role::firstOrCreate(['name' => 'admin', 'description' => 'Akses menyeluruh terhadap kofigurasi server dan sistem.', 'is_system' => true]);
 
-        User::create([
-            'name' => 'Evan',
+        $permissions = [
+            [
+                'name' => 'role.manage',
+                'description' => 'Mengelola role dan hak akses pengguna',
+            ],
+            [
+                'name' => 'user.view',
+                'description' => 'Melihat daftar dan detail akun pengguna',
+            ],
+            [
+                'name' => 'user.create',
+                'description' => 'Membuat akun pengguna baru',
+            ],
+            [
+                'name' => 'user.edit',
+                'description' => 'Mengubah informasi dan data akun pengguna',
+            ],
+            [
+                'name' => 'user.delete',
+                'description' => 'Menghapus atau menonaktifkan akun pengguna',
+            ],
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::updateOrCreate(
+                [
+                    'name' => $permission['name'],
+                    'description' => $permission['description'],
+                ],
+            );
+        }
+
+        $role->givePermissionTo(Permission::all());
+
+        $admin = User::firstOrCreate([
+            'name' => 'SUPER ADMIN',
             'email' => 'yahyaevan8@gmail.com',
-            'password' => Hash::make("123123123"),
+            'password' => Hash::make('123123123'),
+            'email_verified_at' => now(),
+            'is_active' => true,
         ]);
+
+        $admin = User::where('email', 'yahyaevan8@gmail.com')->first();
+
+        $admin->assignRole('admin');
     }
 }

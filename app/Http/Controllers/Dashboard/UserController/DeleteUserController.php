@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Controllers\Dashboard\UserController;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
+class DeleteUserController extends Controller
+{
+    public function __invoke(User $user)
+    {
+        try {
+            $user->delete();
+
+            return redirect()
+                ->back()
+                ->with("success", "Berhasil menghapus akun user.");
+        } catch (\Exception $e) {
+            Log::error("Error : " . $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->with(
+                    "error",
+                    "terjadi kesalahan sistem. Silahkan coba lagi.",
+                );
+        }
+    }
+}
