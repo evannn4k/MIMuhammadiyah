@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\RoleController;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,10 +44,18 @@ class ViewRoleController
             return $perms->values()->all();
         });
 
+        $summary = [
+            'total_roles' => count($roles),
+            'total_users' => User::isActive()->count(),
+            'total_permissions' => Permission::count(),
+            'total_module' => count($groupedPermissions),
+        ];
+
         return Inertia::render('role/page', [
             'roles' => $roles,
             'permissions' => $groupedPermissions,
             'filters' => $request->only(['search', 'tier', 'sort', 'direction', 'page', 'per_page']),
+            'summary' => $summary,
         ]);
     }
 

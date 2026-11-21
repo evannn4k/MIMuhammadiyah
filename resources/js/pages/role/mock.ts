@@ -1,5 +1,5 @@
 import type { Role, RoleFilters, RoleSummary } from '@/types/role';
-import type { Paginated } from '@/types/pagination';
+import type { LaravelPagination } from '@/types/pagination';
 
 export const mockRoles: Role[] = [
     {
@@ -123,7 +123,7 @@ export const mockGroupedPermissions: Record<
 };
 
 // TODO(backend): replace with Inertia props
-export function queryMock(filters: RoleFilters): Paginated<Role> {
+export function queryMock(filters: RoleFilters): LaravelPagination<Role> {
     let data = [...mockRoles];
 
     if (filters.search) {

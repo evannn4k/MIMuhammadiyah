@@ -10,7 +10,6 @@ interface UserShowProps {
 }
 
 export default function UserShow({ user }: UserShowProps) {
-
     return (
         <>
             <Head title={user ? user.name : 'Pengguna'} />
@@ -33,7 +32,7 @@ UserShow.layout = {
         },
         {
             title: 'Detail',
-            href: "#"
+            href: '#',
         },
     ],
 };

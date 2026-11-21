@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SchoolProfile;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -62,8 +63,12 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $admin = User::where('email', 'yahyaevan8@gmail.com')->first();
+        $admin->assignRole($role);
 
-        $admin->assignRole('admin');
+        SchoolProfile::create([
+            'name' => 'SMA Negeri Contoh Indonesia',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

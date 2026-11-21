@@ -15,15 +15,15 @@ class DeleteUserController extends Controller
 
             return redirect()
                 ->back()
-                ->with("success", "Berhasil menghapus akun user.");
+                ->with('success', 'Berhasil menghapus akun user.');
         } catch (\Exception $e) {
-            Log::error("Error : " . $e->getMessage());
+            Log::error('Error : '.$e->getMessage());
 
             return redirect()
                 ->back()
                 ->with(
-                    "error",
-                    "terjadi kesalahan sistem. Silahkan coba lagi.",
+                    'error',
+                    'terjadi kesalahan sistem. Silahkan coba lagi.',
                 );
         }
     }

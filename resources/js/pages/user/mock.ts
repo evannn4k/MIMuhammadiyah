@@ -1,5 +1,5 @@
 import type { User, UserFilters, UserSummary } from '@/types/user';
-import type { Paginated } from '@/types/pagination';
+import type { LaravelPagination } from '@/types/pagination';
 
 // TODO(backend): replace with Inertia props
 export const mockUsers: User[] = [
@@ -330,8 +330,8 @@ export const mockUsers: User[] = [
     },
 ];
 
-// TODO(backend): replace with the paginated Inertia prop
-export function queryMock(filters: UserFilters): Paginated<User> {
+// TODO(backend): replace with the LaravelPagination Inertia prop
+export function queryMock(filters: UserFilters): LaravelPagination<User> {
     let data = [...mockUsers];
 
     if (filters.search) {

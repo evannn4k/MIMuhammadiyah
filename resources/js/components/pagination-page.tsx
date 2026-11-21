@@ -2,8 +2,8 @@ import {
     Pagination,
     PaginationContent,
     PaginationItem,
-} from '@/components/ui/pagination';
-import { Field, FieldLabel } from './ui/field';
+} from "@/components/ui/pagination";
+import { Field, FieldLabel } from "./ui/field";
 import {
     Select,
     SelectContent,
@@ -11,29 +11,35 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from './ui/select';
-import { LinkPagination, MetaPagination } from '@/types/pagination';
-import { Link } from '@inertiajs/react';
+} from "./ui/select";
+import { LinkPagination, MetaPagination } from "@/types/pagination";
+import { Link } from "@inertiajs/react";
 import {
     ChevronLeft,
     ChevronRight,
     ChevronsLeft,
     ChevronsRight,
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Item, ItemContent } from './ui/item';
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Item, ItemContent } from "./ui/item";
+import { cn } from "@/lib/utils";
 
 export function PaginationPage({
     updateQuery,
     links,
     meta,
+    className,
 }: {
     updateQuery: (params: Record<string, any>) => void;
     links: LinkPagination;
     meta: MetaPagination;
+    className?: string;
 }) {
     return (
-        <Item className='w-full rounded-none p-2' variant="muted">
+        <Item
+            className={cn("w-full rounded-none p-2", className)}
+            variant="muted"
+        >
             <ItemContent className="flex flex-row items-center justify-between gap-6 p-0">
                 <Field orientation="horizontal" className="w-fit">
                     <Select
@@ -48,7 +54,7 @@ export function PaginationPage({
                         >
                             <SelectValue />
                         </SelectTrigger>
-                        <SelectContent align="start">
+                        <SelectContent position="item-aligned">
                             <SelectGroup>
                                 <SelectItem value="10">10</SelectItem>
                                 <SelectItem value="25">25</SelectItem>
@@ -61,8 +67,8 @@ export function PaginationPage({
                         Baris per halaman
                     </FieldLabel>
                 </Field>
-                <div className="flex items-center gap-4 md:gap-6">
-                    <FieldLabel>
+                <div className="flex flex-shirk-0 items-center gap-4 md:gap-6">
+                    <FieldLabel className="w-full">
                         Halaman {meta.current_page} dari {meta.last_page}
                     </FieldLabel>
                     <Pagination>
@@ -79,7 +85,7 @@ export function PaginationPage({
                                             <ChevronsLeft />
                                         </span>
                                     ) : (
-                                        <Link href={links.first ?? '#'}>
+                                        <Link href={links.first ?? "#"}>
                                             <ChevronsLeft />
                                         </Link>
                                     )}
@@ -97,7 +103,7 @@ export function PaginationPage({
                                             <ChevronLeft />
                                         </span>
                                     ) : (
-                                        <Link href={links.prev ?? '#'}>
+                                        <Link href={links.prev ?? "#"}>
                                             <ChevronLeft />
                                         </Link>
                                     )}
@@ -119,7 +125,7 @@ export function PaginationPage({
                                             <ChevronRight />
                                         </span>
                                     ) : (
-                                        <Link href={links.next ?? '#'}>
+                                        <Link href={links.next ?? "#"}>
                                             <ChevronRight />
                                         </Link>
                                     )}
@@ -141,7 +147,7 @@ export function PaginationPage({
                                             <ChevronsRight />
                                         </span>
                                     ) : (
-                                        <Link href={links.last ?? '#'}>
+                                        <Link href={links.last ?? "#"}>
                                             <ChevronsRight />
                                         </Link>
                                     )}

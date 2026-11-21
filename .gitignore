@@ -11,7 +11,8 @@
 /resources/js/routes
 /resources/js/wayfinder
 /vendor
-.DS_Store
+/stitch-export
+.DS_Store 
 .env
 .env.backup
 .env.production

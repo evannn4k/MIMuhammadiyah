@@ -22,7 +22,8 @@ export interface RoleFilters {
 export interface RoleSummary {
     total_roles: number;
     total_users: number;
-    active_permissions: number;
+    total_permissions: number;
+    total_module: number;
 }
 
 export interface RoleName {

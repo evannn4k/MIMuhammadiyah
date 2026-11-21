@@ -4,7 +4,7 @@ import { dashboard } from '@/routes';
 import dashboardRoutes from '@/routes/dashboard';
 import { useModal } from '@/hooks/use-modal';
 import { summaryMock } from './mock';
-import type { Role, RoleFilters } from '@/types/role';
+import type { Role, RoleFilters, RoleSummary } from '@/types/role';
 import RoleHeaderSection from './components/role-header-section';
 import RoleCardSummary from './components/role-card-summary';
 import RoleFormModal from './components/role-form-modal';
@@ -28,20 +28,20 @@ interface RolePageProps {
     filters: RoleFilters;
     roles: Role[];
     permissions: Record<string, { name: string; description: string }[]>;
+    summary: RoleSummary;
 }
 
 export default function RolePage({
     filters,
     roles,
     permissions,
+    summary,
 }: RolePageProps) {
     const modal = useModal();
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
         [],
     );
     const [pending, setPending] = useState<boolean>(false);
-
-    const summary = summaryMock();
 
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 

@@ -17,14 +17,14 @@ class UpdateUserController extends Controller
         try {
             $user->update($credentials);
             $role = Role::findOrFail($credentials['role_id']);
-            
+
             $user->syncRoles($role);
 
             return redirect()
                 ->back()
                 ->with('success', 'Berhasil mengedit akun user.');
         } catch (\Exception $e) {
-            Log::error('Error : ' . $e->getMessage());
+            Log::error('Error : '.$e->getMessage());
 
             return redirect()
                 ->back()

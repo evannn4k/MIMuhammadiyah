@@ -30,13 +30,14 @@ export default function UserFormModal({ roles, modal }: UserFormModalProps) {
     const data = (modal.data ?? null) as User | null;
     const isEdit = isOpen('edit');
 
-    console.log(data)
+    console.log(data);
 
     const fields: FieldConfig[] = [
         {
-            name: 'name', label: 'Nama',
+            name: 'name',
+            label: 'Nama',
             className: 'sm:col-span-2',
-            placeholder: 'Nama lengkap'
+            placeholder: 'Nama lengkap',
         },
         {
             name: 'email',
@@ -58,7 +59,10 @@ export default function UserFormModal({ roles, modal }: UserFormModalProps) {
             name: 'role_id',
             label: 'Role',
             type: 'select',
-            options: roles.map((role) => ({ label: role.name, value: role.id })),
+            options: roles.map((role) => ({
+                label: role.name,
+                value: role.id,
+            })),
             placeholder: 'pilih role',
         },
         {
@@ -108,11 +112,17 @@ export default function UserFormModal({ roles, modal }: UserFormModalProps) {
                             <>
                                 <FormFieldWrapper cols={2}>
                                     {fields.map((field) => {
-                                        if (['password', 'password_confirmation'].includes(field.name) && isEdit) {
+                                        if (
+                                            [
+                                                'password',
+                                                'password_confirmation',
+                                            ].includes(field.name) &&
+                                            isEdit
+                                        ) {
                                             return null;
                                         }
 
-                                        console.log(data?.[field.name])
+                                        console.log(data?.[field.name]);
 
                                         return (
                                             <FormField
@@ -138,15 +148,15 @@ export default function UserFormModal({ roles, modal }: UserFormModalProps) {
                                         {processing
                                             ? 'Menyimpan...'
                                             : isEdit
-                                                ? 'Simpan'
-                                                : 'Tambah'}
+                                              ? 'Simpan'
+                                              : 'Tambah'}
                                     </Button>
                                 </DialogFooter>
                             </>
-                        )
+                        );
                     }}
                 </Form>
             </DialogContent>
-        </Dialog >
+        </Dialog>
     );
 }

@@ -4,7 +4,7 @@ export interface PaginationLink {
     active: boolean;
 }
 
-export interface Pagination<T> {
+export interface LaravelPagination<T> {
     data: T[];
     links: {
         first: string | null;

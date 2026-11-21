@@ -10,6 +10,7 @@ use App\Http\Controllers\Dashboard\RoleController\DeleteRoleController;
 use App\Http\Controllers\Dashboard\RoleController\SyncPermissionRoleController;
 use App\Http\Controllers\Dashboard\RoleController\UpdateRoleController;
 use App\Http\Controllers\Dashboard\RoleController\ViewRoleController;
+use App\Http\Controllers\Dashboard\SchoolProfileController\UpdateSchoolProfileController;
 use App\Http\Controllers\Dashboard\SchoolProfileController\ViewSchoolProfileController;
 use App\Http\Controllers\Dashboard\SettingController\ViewSettingController;
 use App\Http\Controllers\Dashboard\SliderController\ViewSliderController;
@@ -85,6 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // School Profile (Profil Sekolah)
     Route::prefix('profil-sekolah')->name('school-profile.')->group(function () {
         Route::get('', [ViewSchoolProfileController::class, 'index'])->name('index');
+        Route::put('/{schoolProfile}', UpdateSchoolProfileController::class)->name('update');
     });
 
     // Contact Message (Pesan)

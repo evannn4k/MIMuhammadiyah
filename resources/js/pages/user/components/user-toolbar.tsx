@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -10,6 +9,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 
 interface UserToolbarProps {
     query: Record<string, any>;
@@ -41,26 +46,36 @@ export default function UserToolbar({
     }, [search, query.search, updateQuery]);
 
     return (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="relative w-full sm:max-w-xs">
-                    <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        name="search"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        placeholder="Cari nama atau email..."
-                        className="pl-9"
-                    />
+        <Card className="bg-muted/50 p-2">
+            <CardContent className="flex flex-col gap-3 p-0 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="w-full sm:max-w-xs">
+                        <InputGroup className="max-w-xs">
+                            <InputGroupAddon align="inline-start">
+                                <Search className="size-4 text-muted-foreground" />
+                            </InputGroupAddon>
+                            <InputGroupInput
+                                type="search"
+                                name="search"
+                                value={search}
+                                onChange={(event) => setSearch(event.target.value)}
+                                placeholder="Cari nama atau email..."
+                            />
+                            {search && (
+                                <InputGroupAddon align="inline-end">
+                                    <button
+                                        type="button"
+                                        className="text-muted-foreground hover:text-foreground transition-colors"
+                                        onClick={() => setSearch('')}
+                                    >
+                                        <X className="size-4" />
+                                    </button>
+                                </InputGroupAddon>
+                            )}
+                        </InputGroup>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Label
-                        htmlFor="user-status-filter"
-                        className="whitespace-nowrap"
-                    >
-                        Status
-                    </Label>
+                <div className="flex flex-wrap items-center gap-2">
                     <Select
                         value={query.status ?? 'all'}
                         onValueChange={(value) =>
@@ -80,11 +95,7 @@ export default function UserToolbar({
                         </SelectContent>
                     </Select>
                 </div>
-            </div>
-            <Button onClick={onCreate}>
-                <Plus />
-                Tambah Pengguna
-            </Button>
-        </div>
+            </CardContent>
+        </Card>
     );
 }

@@ -18,7 +18,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import type { Role } from '@/types/role';
-import type { Paginated } from '@/types/pagination';
+import type { LaravelPagination } from '@/types/pagination';
 
 const tierLabels: Record<string, string> = {
     root: 'Root',
@@ -27,7 +27,7 @@ const tierLabels: Record<string, string> = {
 };
 
 interface RoleTableProps {
-    paginated: Paginated<Role>;
+    LaravelPagination: LaravelPagination<Role>;
     query: Record<string, any>;
     updateQuery: (params: Record<string, any>) => void;
     onEdit: (role: Role) => void;
@@ -35,7 +35,7 @@ interface RoleTableProps {
 }
 
 export default function RoleTable({
-    paginated,
+    LaravelPagination,
     query,
     updateQuery,
     onEdit,
@@ -99,7 +99,7 @@ export default function RoleTable({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginated.data.map((role) => (
+                        {LaravelPagination.data.map((role) => (
                             <TableRow key={role.id}>
                                 <TableCell>
                                     <div className="flex flex-col gap-0.5">
@@ -168,7 +168,7 @@ export default function RoleTable({
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {paginated.data.length === 0 && (
+                        {LaravelPagination.data.length === 0 && (
                             <TableRow>
                                 <TableCell
                                     colSpan={6}

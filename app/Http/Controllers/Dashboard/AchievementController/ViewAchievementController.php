@@ -10,13 +10,27 @@ class ViewAchievementController
 {
     public function index(Request $request): Response
     {
+        $allowedParams = [
+            'search',
+            'category',
+            'is_published',
+            'sort',
+            'direction',
+            'page',
+            'per_page',
+        ];
+
+        $filters = $request->only($allowedParams);
+
         return Inertia::render('achievement/page', [
-            'filters' => $request->only(['search', 'year', 'sort', 'direction', 'page', 'per_page']),
+            'filters' => $filters,
         ]);
     }
 
-    public function show(string $achievement): Response
+    public function show(Request $request, string $id): Response
     {
-        return Inertia::render('achievement/show', ['id' => $achievement]);
+        return Inertia::render('achievement/show', [
+            'id' => $id,
+        ]);
     }
 }

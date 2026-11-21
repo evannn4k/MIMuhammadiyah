@@ -10,8 +10,12 @@ export default function RoleCardSummary({ summary }: RoleCardSummaryProps) {
     const items = [
         { label: 'Total Peran', value: summary.total_roles, icon: ShieldCheck },
         { label: 'Total Pengguna', value: summary.total_users, icon: Users },
-        { label: 'Izin Aktif', value: summary.active_permissions, icon: Key },
-        { label: 'Modul Dikelola', value: 8, icon: Settings },
+        { label: 'Izin Aktif', value: summary.total_permissions, icon: Key },
+        {
+            label: 'Modul Dikelola',
+            value: summary.total_module,
+            icon: Settings,
+        },
     ];
 
     return (
