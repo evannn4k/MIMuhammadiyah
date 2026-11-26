@@ -46,7 +46,7 @@ export default function UserToolbar({
     }, [search, query.search, updateQuery]);
 
     return (
-        <Card className="bg-muted/50 p-2">
+        <Card className="bg-muted/50 p-4">
             <CardContent className="flex flex-col gap-3 p-0 md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
                     <div className="w-full sm:max-w-xs">

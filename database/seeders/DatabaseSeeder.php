@@ -19,56 +19,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::firstOrCreate(['name' => 'admin', 'description' => 'Akses menyeluruh terhadap kofigurasi server dan sistem.', 'is_system' => true]);
-
-        $permissions = [
-            [
-                'name' => 'role.manage',
-                'description' => 'Mengelola role dan hak akses pengguna',
-            ],
-            [
-                'name' => 'user.view',
-                'description' => 'Melihat daftar dan detail akun pengguna',
-            ],
-            [
-                'name' => 'user.create',
-                'description' => 'Membuat akun pengguna baru',
-            ],
-            [
-                'name' => 'user.edit',
-                'description' => 'Mengubah informasi dan data akun pengguna',
-            ],
-            [
-                'name' => 'user.delete',
-                'description' => 'Menghapus atau menonaktifkan akun pengguna',
-            ],
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::updateOrCreate(
-                [
-                    'name' => $permission['name'],
-                    'description' => $permission['description'],
-                ],
-            );
-        }
+        $role = Role::firstOrCreate([
+            "name" => "admin",
+            "description" =>
+                "Akses menyeluruh terhadap kofigurasi server dan sistem.",
+            "is_system" => true,
+        ]);
 
         $role->givePermissionTo(Permission::all());
 
         $admin = User::firstOrCreate([
-            'name' => 'SUPER ADMIN',
-            'email' => 'yahyaevan8@gmail.com',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-            'is_active' => true,
+            "name" => "SUPER ADMIN",
+            "email" => "yahyaevan8@gmail.com",
+            "password" => Hash::make("123123123"),
+            "email_verified_at" => now(),
+            "is_active" => true,
         ]);
 
         $admin->assignRole($role);
 
         SchoolProfile::create([
-            'name' => 'SMA Negeri Contoh Indonesia',
-            'created_at' => now(),
-            'updated_at' => now(),
+            "name" => "SMA Negeri Contoh Indonesia",
+            "created_at" => now(),
+            "updated_at" => now(),
         ]);
+
+        $this->call([SchoolProfileSeeder::class, PermissionSeeder::class]);
     }
 }

@@ -56,7 +56,7 @@ export default function SliderToolbar({
     };
 
     return (
-        <Card className="bg-muted/50 p-2">
+        <Card className="bg-muted/50 p-4">
             <CardContent className="flex flex-col gap-4 p-0 md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-1 items-center gap-2">
                     <div className="flex-1 md:max-w-sm">
