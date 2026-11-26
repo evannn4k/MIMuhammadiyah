@@ -16,21 +16,21 @@ class CreateUserController extends Controller
 
         try {
             $user = User::create($credentials);
-            $role = Role::findOrFail($credentials['role_id']);
+            $role = Role::findOrFail($credentials["role_id"]);
 
             $user->assignRole($role);
 
             return redirect()
                 ->back()
-                ->with('success', 'Berhasil menambah user baru.');
+                ->with("success", "Berhasil menambah user baru.");
         } catch (\Exception $e) {
-            Log::error('Error : '.$e->getMessage());
+            Log::error("Error : " . $e->getMessage());
 
             return redirect()
                 ->back()
                 ->with(
-                    'error',
-                    'Terjadi kesalahan sistem. Silahkan coba lagi.',
+                    "error",
+                    "Terjadi kesalahan sistem. Silahkan coba lagi.",
                 );
         }
     }

@@ -1,4 +1,6 @@
-import { Form } from '@inertiajs/react';
+'use client';
+
+import { useForm } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,6 +56,20 @@ export default function GalleryFormModal({
     const { isOpen, closeModal } = modal;
     const isEdit = isOpen('edit');
     const data = (modal.data ?? null) as GalleryItem | null;
+
+    const { data: form, setData, post, put, processing, errors, reset } = useForm({
+        title: data?.title ?? '',
+        category: data?.category ?? '',
+        format: data?.format ?? '',
+        status: data?.status ?? '',
+        period: data?.period ?? '',
+        file_size: data?.file_size ?? '',
+        dimensions: data?.dimensions ?? '',
+        uploaded_by: data?.uploaded_by ?? '',
+        uploaded_at: data?.uploaded_at ?? '',
+        image_url: data?.image_url ?? '',
+        is_published: data?.is_published ?? false,
+    });
 
     const fields: FieldConfig[] = [
         {
@@ -120,16 +136,37 @@ export default function GalleryFormModal({
             name: 'is_published',
             label: 'Tayang di Website Publik',
             type: 'checkbox',
-            defaultValue: false,
         },
     ];
 
-    // TODO(backend): replace with Wayfinder action route when create/update controllers exist
     const createAction = '/dashboard/galeri';
     const updateAction = (id: number) => `/dashboard/galeri/${id}`;
 
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const action = isEdit && data ? updateAction(data.id) : createAction;
+
+        if (isEdit) {
+            put(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        } else {
+            post(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        }
+        closeModal();
+    };
+
     return (
         <Dialog
+            key={data?.id ?? 'create'}
             open={isOpen('create') || isOpen('edit')}
             onOpenChange={closeModal}
         >
@@ -144,63 +181,38 @@ export default function GalleryFormModal({
                             : 'Lengkapi data lampiran foto baru di bawah ini.'}
                     </DialogDescription>
                 </DialogHeader>
-                <Form
-                    action={isEdit ? updateAction(modal.data.id) : createAction}
-                    method={isEdit ? 'put' : 'post'}
-                    options={{
-                        preserveScroll: true,
-                        preserveState: true,
-                    }}
-                    onBefore={() => false}
-                    onSuccess={() => {
-                        closeModal();
-                    }}
-                    resetOnSuccess
-                >
-                    {({ errors, processing }) => {
-                        return (
-                            <>
-                                <FormFieldWrapper cols={2}>
-                                    {fields.map((field) => {
-                                        const value =
-                                            data?.[
-                                                field.name as keyof GalleryItem
-                                            ];
-                                        return (
-                                            <FormField
-                                                key={field.name}
-                                                {...field}
-                                                defaultValue={
-                                                    value !== null &&
-                                                    value !== undefined
-                                                        ? value
-                                                        : undefined
-                                                }
-                                                error={errors[field.name]}
-                                            />
-                                        );
-                                    })}
-                                </FormFieldWrapper>
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={closeModal}
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button type="submit" disabled={processing}>
-                                        {processing
-                                            ? 'Menyimpan...'
-                                            : isEdit
-                                              ? 'Simpan'
-                                              : 'Tambah'}
-                                    </Button>
-                                </DialogFooter>
-                            </>
-                        );
-                    }}
-                </Form>
+                <form onSubmit={submit}>
+                    <FormFieldWrapper cols={2}>
+                        {fields.map((field) => (
+                            <FormField
+                                key={field.name}
+                                {...field}
+                                value={form[field.name as keyof typeof form]}
+                                onChange={(val) => setData(field.name as any, val)}
+                                onCheckedChange={(checked) =>
+                                    setData(field.name as any, checked)
+                                }
+                                error={(errors as any)[field.name]}
+                            />
+                        ))}
+                    </FormFieldWrapper>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={closeModal}
+                        >
+                            Batal
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing
+                                ? 'Menyimpan...'
+                                : isEdit
+                                  ? 'Simpan'
+                                  : 'Tambah'}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

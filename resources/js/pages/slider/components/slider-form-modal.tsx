@@ -1,4 +1,4 @@
-import { Form } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +45,19 @@ export default function SliderFormModal({ modal }: SliderFormModalProps) {
     const { isOpen, closeModal } = modal;
     const isEdit = isOpen('edit');
     const data = (modal.data ?? null) as Slider | null;
+
+    const { data: form, setData, post, put, processing, errors, reset } = useForm({
+        title: data?.title ?? '',
+        subtitle: data?.subtitle ?? '',
+        image_path: data?.image_path ?? '',
+        cta_text: data?.cta_text ?? '',
+        cta_url: data?.cta_url ?? '',
+        category: data?.category ?? '',
+        is_active: data?.is_active ? 'active' : 'inactive',
+        starts_at: data?.starts_at ?? '',
+        ends_at: data?.ends_at ?? '',
+        target_device: data?.target_device ?? 'all',
+    });
 
     const fields: FieldConfig[] = [
         {
@@ -114,8 +127,31 @@ export default function SliderFormModal({ modal }: SliderFormModalProps) {
     const createAction = '/dashboard/slider';
     const updateAction = (id: number) => `/dashboard/slider/${id}`;
 
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const action = isEdit && data ? updateAction(data.id) : createAction;
+
+        if (isEdit) {
+            put(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        } else {
+            post(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        }
+        closeModal();
+    };
+
     return (
         <Dialog
+            key={data?.id ?? 'create'}
             open={isOpen('create') || isOpen('edit')}
             onOpenChange={closeModal}
         >
@@ -130,80 +166,64 @@ export default function SliderFormModal({ modal }: SliderFormModalProps) {
                             : 'Lengkapi data banner slider baru di bawah ini.'}
                     </DialogDescription>
                 </DialogHeader>
-                <Form
-                    action={isEdit ? updateAction(modal.data.id) : createAction}
-                    method={isEdit ? 'put' : 'post'}
-                    options={{
-                        preserveScroll: true,
-                        preserveState: true,
-                    }}
-                    onBefore={() => false}
-                    onSuccess={() => {
-                        closeModal();
-                    }}
-                    resetOnSuccess
-                >
-                    {({ errors, processing }) => {
-                        return (
-                            <>
-                                <div className="grid gap-4 py-4">
-                                    <FormFieldWrapper cols={2}>
-                                        {fields.map((field) => (
-                                            <FormField
-                                                key={field.name}
-                                                {...field}
-                                                defaultValue={
-                                                    data?.[field.name as keyof Slider]
-                                                }
-                                                error={errors[field.name]}
-                                            />
-                                        ))}
-                                    </FormFieldWrapper>
+                <form onSubmit={submit}>
+                    <div className="grid gap-4 py-4">
+                        <FormFieldWrapper cols={2}>
+                            {fields.map((field) => (
+                                <FormField
+                                    key={field.name}
+                                    {...field}
+                                    value={form[field.name as keyof typeof form]}
+                                    onChange={(val) => setData(field.name as any, val)}
+                                    onCheckedChange={(checked) =>
+                                        setData(field.name as any, checked)
+                                    }
+                                    error={(errors as any)[field.name]}
+                                />
+                            ))}
+                        </FormFieldWrapper>
 
-                                    <div className="sm:col-span-2">
-                                        <label className="block text-sm font-medium text-foreground mb-2">
-                                            Pratinjau Gambar
-                                        </label>
-                                        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted border border-border">
-                                            {data?.image_path ? (
-                                                <img
-                                                    src={data.image_path}
-                                                    alt={data.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="flex items-center justify-center h-full text-muted-foreground">
-                                                    <ImageIcon className="size-8" />
-                                                    <span className="ml-2">Belum ada gambar</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                            Resolusi disarankan: 1920 × 800 px (rasio 16:9), format WebP/JPG/PNG, maks. 2MB
-                                        </p>
+                        <div className="sm:col-span-2">
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                                Pratinjau Gambar
+                            </label>
+                            <div className="relative aspect-video rounded-lg overflow-hidden bg-muted border border-border">
+                                {form.image_path ? (
+                                    <img
+                                        src={form.image_path}
+                                        alt={form.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                                        <ImageIcon className="size-8" />
+                                        <span className="ml-2">Belum ada gambar</span>
                                     </div>
-                                </div>
+                                )}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Resolusi disarankan: 1920 × 800 px (rasio 16:9), format WebP/JPG/PNG, maks. 2MB
+                            </p>
+                        </div>
+                    </div>
 
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={closeModal}
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button type="submit" disabled={processing}>
-                                        {processing
-                                            ? 'Menyimpan...'
-                                            : isEdit
-                                            ? 'Simpan'
-                                            : 'Publikasikan'}
-                                    </Button>
-                                </DialogFooter>
-                            </>
-                        );
-                    }}
-                </Form>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={closeModal}
+                        >
+                            Batal
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing
+                                ? 'Menyimpan...'
+                                : isEdit
+                                ? 'Simpan'
+                                : 'Publikasikan'}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

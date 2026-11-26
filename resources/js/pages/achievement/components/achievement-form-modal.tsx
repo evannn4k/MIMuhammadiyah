@@ -1,4 +1,6 @@
-import { Form } from '@inertiajs/react';
+'use client';
+
+import { useForm } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -57,6 +59,22 @@ export default function AchievementFormModal({
     const { isOpen, closeModal } = modal;
     const isEdit = isOpen('edit');
     const data = (modal.data ?? null) as Achievement | null;
+
+    const { data: form, setData, post, put, processing, errors, reset } = useForm({
+        title: data?.title ?? '',
+        slug: data?.slug ?? '',
+        category: data?.category ?? '',
+        level: data?.level ?? '',
+        recipient_type: data?.recipient_type ?? '',
+        recipient_name: data?.recipient_name ?? '',
+        recipient_class: data?.recipient_class ?? '',
+        rank: data?.rank ?? '',
+        organizer: data?.organizer ?? '',
+        instituted_at: data?.instituted_at ?? '',
+        achievement_year: data?.achievement_year ? String(data.achievement_year) : '',
+        image_url: data?.image_url ?? '',
+        is_published: data?.is_published ?? false,
+    });
 
     const fields: FieldConfig[] = [
         {
@@ -134,16 +152,37 @@ export default function AchievementFormModal({
             name: 'is_published',
             label: 'Tayang di Website Publik',
             type: 'checkbox',
-            defaultValue: false,
         },
     ];
 
-    // TODO(backend): replace with Wayfinder action route when create/update controllers exist
     const createAction = '/dashboard/prestasi';
     const updateAction = (id: number) => `/dashboard/prestasi/${id}`;
 
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const action = isEdit && data ? updateAction(data.id) : createAction;
+
+        if (isEdit) {
+            put(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        } else {
+            post(action, {
+                onBefore: () => false,
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => closeModal(),
+            });
+        }
+        closeModal();
+    };
+
     return (
         <Dialog
+            key={data?.id ?? 'create'}
             open={isOpen('create') || isOpen('edit')}
             onOpenChange={closeModal}
         >
@@ -158,63 +197,38 @@ export default function AchievementFormModal({
                             : 'Lengkapi data prestasi & penghargaan baru di bawah ini.'}
                     </DialogDescription>
                 </DialogHeader>
-                <Form
-                    action={isEdit ? updateAction(modal.data.id) : createAction}
-                    method={isEdit ? 'put' : 'post'}
-                    options={{
-                        preserveScroll: true,
-                        preserveState: true,
-                    }}
-                    onBefore={() => false}
-                    onSuccess={() => {
-                        closeModal();
-                    }}
-                    resetOnSuccess
-                >
-                    {({ errors, processing }) => {
-                        return (
-                            <>
-                                <FormFieldWrapper cols={2}>
-                                    {fields.map((field) => {
-                                        const value =
-                                            data?.[
-                                                field.name as keyof Achievement
-                                            ];
-                                        return (
-                                            <FormField
-                                                key={field.name}
-                                                {...field}
-                                                defaultValue={
-                                                    value !== null &&
-                                                    value !== undefined
-                                                        ? value
-                                                        : undefined
-                                                }
-                                                error={errors[field.name]}
-                                            />
-                                        );
-                                    })}
-                                </FormFieldWrapper>
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={closeModal}
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button type="submit" disabled={processing}>
-                                        {processing
-                                            ? 'Menyimpan...'
-                                            : isEdit
-                                              ? 'Simpan'
-                                              : 'Tambah'}
-                                    </Button>
-                                </DialogFooter>
-                            </>
-                        );
-                    }}
-                </Form>
+                <form onSubmit={submit}>
+                    <FormFieldWrapper cols={2}>
+                        {fields.map((field) => (
+                            <FormField
+                                key={field.name}
+                                {...field}
+                                value={form[field.name as keyof typeof form]}
+                                onChange={(val) => setData(field.name as any, val)}
+                                onCheckedChange={(checked) =>
+                                    setData(field.name as any, checked)
+                                }
+                                error={(errors as any)[field.name]}
+                            />
+                        ))}
+                    </FormFieldWrapper>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={closeModal}
+                        >
+                            Batal
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing
+                                ? 'Menyimpan...'
+                                : isEdit
+                                  ? 'Simpan'
+                                  : 'Tambah'}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

@@ -6,11 +6,6 @@ export interface SchoolProfileFilter {
     per_page?: string;
 }
 
-export interface MissionItem {
-    order: number;
-    content: string;
-}
-
 export interface SocialLink {
     platform: string;
     url: string;
@@ -29,7 +24,7 @@ export interface SchoolProfile {
     logo: string | null;
     history: string | null;
     vision: string | null;
-    mission: MissionItem[];
+    mission: string;
     headmaster_name: string | null;
     headmaster_photo: string | null;
     headmaster_greeting: string | null;

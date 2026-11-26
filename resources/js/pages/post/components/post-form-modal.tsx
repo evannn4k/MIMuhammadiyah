@@ -49,14 +49,23 @@ export default function PostFormModal({ modal }: PostFormModalProps) {
             name: 'category',
             label: 'Kategori',
             type: 'select',
-            options: categories,
+            options: [
+                { label: 'Akademik', value: 'Akademik' },
+                { label: 'Kesiswaan & Ekskul', value: 'Kesiswaan & Ekskul' },
+                { label: 'Pengumuman Resmi', value: 'Pengumuman Resmi' },
+                { label: 'Prestasi', value: 'Prestasi' },
+            ],
             placeholder: 'Pilih kategori',
         },
         {
             name: 'status',
             label: 'Status',
             type: 'select',
-            options: statuses,
+            options: [
+                { label: 'Terbit', value: 'published' },
+                { label: 'Draft', value: 'draft' },
+                { label: 'Diarsipkan', value: 'archived' },
+            ],
             placeholder: 'Pilih status',
         },
         {

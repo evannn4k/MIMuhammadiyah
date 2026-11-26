@@ -1,19 +1,22 @@
-import { Head } from '@inertiajs/react';
-import { Form } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { dashboard } from '@/routes';
-import dashboardRoutes from '@/routes/dashboard';
-import { SchoolProfileMainForm } from './components/section-card';
-import SchoolProfileSidebar from './components/sidebar';
-import type { SchoolProfile } from '@/types/school-profile';
-import { Building2, Edit } from 'lucide-react';
-import { update } from '@/routes/dashboard/school-profile';
+import { Head } from "@inertiajs/react";
+import { Form } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
+import { dashboard } from "@/routes";
+import dashboardRoutes from "@/routes/dashboard";
+import { SchoolProfileMainForm } from "./components/section-card";
+import SchoolProfileSidebar from "./components/sidebar";
+import type { SchoolProfile } from "@/types/school-profile";
+import { Building2, Edit } from "lucide-react";
+import { update } from "@/routes/dashboard/school-profile";
+import { Spinner } from "@/components/ui/spinner";
+import { useState } from "react";
 
 interface SchoolProfilePageProps {
     data: SchoolProfile;
 }
 
 export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
+    const [formData, setFormData] = useState<SchoolProfile>(data);
     return (
         <>
             <Head title="Profil Sekolah" />
@@ -30,7 +33,7 @@ export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
                                         </div>
                                         <div>
                                             <h1 className="text-2xl leading-tight font-semibold text-slate-900 dark:text-slate-100">
-                                                {data.name}
+                                                {formData.name}
                                             </h1>
                                             <p className="text-sm text-muted-foreground">
                                                 Profil Sekolah & Identitas
@@ -53,10 +56,14 @@ export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
                                             disabled={processing}
                                             className="gap-2"
                                         >
-                                            <Edit className="size-4" />
+                                            {processing ? (
+                                                <Spinner />
+                                            ) : (
+                                                <Edit className="size-4" />
+                                            )}
                                             {processing
-                                                ? 'Menyimpan...'
-                                                : 'Simpan Perubahan'}
+                                                ? "Menyimpan..."
+                                                : "Simpan Perubahan"}
                                         </Button>
                                     </div>
                                 </div>
@@ -67,7 +74,7 @@ export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
                                 {/* Left Column - 2/3 (8 cols) */}
                                 <div className="lg:col-span-8">
                                     <SchoolProfileMainForm
-                                        data={data}
+                                        data={formData}
                                         errors={{ ...errors }}
                                     />
                                 </div>
@@ -75,7 +82,7 @@ export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
                                 {/* Right Column - 1/3 (4 cols) */}
                                 <div className="lg:col-span-4">
                                     <SchoolProfileSidebar
-                                        data={data}
+                                        data={formData}
                                         errors={{ ...errors }}
                                     />
                                 </div>
@@ -91,11 +98,11 @@ export default function SchoolProfilePage({ data }: SchoolProfilePageProps) {
 SchoolProfilePage.layout = {
     breadcrumbs: [
         {
-            title: 'Dashboard',
+            title: "Dashboard",
             href: dashboard(),
         },
         {
-            title: 'Profil Sekolah',
+            title: "Profil Sekolah",
             href: dashboardRoutes.schoolProfile.index(),
         },
     ],

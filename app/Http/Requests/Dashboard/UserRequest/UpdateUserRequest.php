@@ -24,7 +24,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$this->route('user')?->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$this->route('user')->id,
             'role_id' => 'required|integer|exists:roles,id',
             'position' => 'nullable|string|max:100',
             'is_active' => 'sometimes|boolean',

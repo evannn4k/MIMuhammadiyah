@@ -86,44 +86,6 @@ const visionFields: FieldConfig[] = [
     },
 ];
 
-const missionFields: FieldConfig[] = [
-    {
-        name: "mission_0",
-        label: "Misi 1",
-        type: "textarea",
-        placeholder: "Misi pertama",
-        rows: 2,
-    },
-    {
-        name: "mission_1",
-        label: "Misi 2",
-        type: "textarea",
-        placeholder: "Misi kedua",
-        rows: 2,
-    },
-    {
-        name: "mission_2",
-        label: "Misi 3",
-        type: "textarea",
-        placeholder: "Misi ketiga",
-        rows: 2,
-    },
-    {
-        name: "mission_3",
-        label: "Misi 4",
-        type: "textarea",
-        placeholder: "Misi keempat",
-        rows: 2,
-    },
-    {
-        name: "mission_4",
-        label: "Misi 5",
-        type: "textarea",
-        placeholder: "Misi kelima",
-        rows: 2,
-    },
-];
-
 const headmasterFields: FieldConfig[] = [
     {
         name: "headmaster_name",
@@ -284,14 +246,31 @@ function renderMissionFields(
     data: SchoolProfile,
     errors: Record<string, string>,
 ) {
-    return missionFields.map((field, index) => {
-        const value = data.mission?.[index]?.content ?? "";
+    // return missionFields.map((field, index) => {
+    //     const value = JSON.parse(data.mission)[index] ?? "";
+    //     return (
+    //         <FormField
+    //             key={value}
+    //             {...field}
+    //             defaultValue={value}
+    //             error={errors[field.name]}
+    //         />
+    //     );
+    // });
+    //
+    //
+    return JSON.parse(data.mission).map((value: string, index: number) => {
+        console.log(value);
+        console.log(index);
         return (
             <FormField
-                key={field.name}
-                {...field}
+                key={value}
+                name="mission[]"
+                label={"Misi ke " + index}
+                type="textarea"
+                rows={2}
                 defaultValue={value}
-                error={errors[field.name]}
+                error={errors["mission"]}
             />
         );
     });

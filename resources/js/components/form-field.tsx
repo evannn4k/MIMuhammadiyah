@@ -28,6 +28,11 @@ interface FormFieldProps {
         | 'date'
         | 'checkbox';
     defaultValue?: string | number | readonly string[] | undefined | boolean;
+    value?: string | number | readonly string[] | undefined | boolean;
+    onChange?: (
+        value: string | number | readonly string[] | boolean,
+    ) => void;
+    onCheckedChange?: (checked: boolean) => void;
     placeholder?: string;
     options?: { label: string; value: string | number }[];
     rows?: number;
@@ -42,6 +47,9 @@ export default function FormField({
     label,
     type = 'text',
     defaultValue,
+    value,
+    onChange,
+    onCheckedChange,
     placeholder = '',
     options = [],
     rows,
@@ -56,6 +64,8 @@ export default function FormField({
         'aria-invalid': invalid,
         'aria-describedby': invalid ? errorId : undefined,
     };
+
+    const isControlled = value !== undefined;
 
     return (
         <Field className={cn('flex w-full flex-col gap-2', className)}>
@@ -73,13 +83,17 @@ export default function FormField({
                 <Textarea
                     id={name}
                     name={name}
+                    value={isControlled ? (value as string) : undefined}
                     defaultValue={
-                        defaultValue as
-                            | string
-                            | number
-                            | readonly string[]
-                            | undefined
+                        !isControlled
+                            ? (defaultValue as
+                                  | string
+                                  | number
+                                  | readonly string[]
+                                  | undefined)
+                            : undefined
                     }
+                    onChange={(e) => onChange?.(e.target.value)}
                     placeholder={placeholder}
                     rows={rows}
                     disabled={disabled}
@@ -88,11 +102,15 @@ export default function FormField({
             ) : type === 'select' ? (
                 <Select
                     name={name}
+                    value={isControlled ? String(value) : undefined}
                     defaultValue={
-                        defaultValue !== undefined
-                            ? String(defaultValue)
+                        !isControlled
+                            ? defaultValue !== undefined
+                                ? String(defaultValue)
+                                : undefined
                             : undefined
                     }
+                    onValueChange={(val) => onChange?.(val)}
                     disabled={disabled}
                 >
                     <SelectTrigger id={name} className="w-full" {...ariaProps}>
@@ -117,7 +135,11 @@ export default function FormField({
                     <Checkbox
                         id={name}
                         name={name}
-                        defaultChecked={Boolean(defaultValue)}
+                        checked={isControlled ? Boolean(value) : undefined}
+                        defaultChecked={
+                            !isControlled ? Boolean(defaultValue) : undefined
+                        }
+                        onCheckedChange={onCheckedChange}
                         disabled={disabled}
                         value="1"
                         {...ariaProps}
@@ -134,13 +156,17 @@ export default function FormField({
                     id={name}
                     name={name}
                     type={type}
+                    value={isControlled ? (value as string | number) : undefined}
                     defaultValue={
-                        defaultValue as
-                            | string
-                            | number
-                            | readonly string[]
-                            | undefined
+                        !isControlled
+                            ? (defaultValue as
+                                  | string
+                                  | number
+                                  | readonly string[]
+                                  | undefined)
+                            : undefined
                     }
+                    onChange={(e) => onChange?.(e.target.value)}
                     placeholder={placeholder}
                     disabled={disabled}
                     {...ariaProps}

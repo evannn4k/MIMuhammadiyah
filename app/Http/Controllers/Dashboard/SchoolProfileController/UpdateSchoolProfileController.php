@@ -9,11 +9,15 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateSchoolProfileController extends Controller
 {
-    public function __invoke(UpdateSchoolProfileRequest $request, SchoolProfile $schoolProfile)
-    {
+    public function __invoke(
+        UpdateSchoolProfileRequest $request,
+        SchoolProfile $schoolProfile,
+    ) {
         $credentials = $request->validated();
 
+        dd($credentials);
         try {
+
             $schoolProfile->update($credentials);
 
             return redirect()

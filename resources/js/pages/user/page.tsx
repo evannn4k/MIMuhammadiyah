@@ -1,20 +1,20 @@
-import { Head, router } from '@inertiajs/react';
-import { dashboard } from '@/routes';
-import dashboardRoutes from '@/routes/dashboard';
-import { useModal } from '@/hooks/use-modal';
-import { useQueryParams } from '@/hooks/use-query-params';
-import { queryMock, summaryMock } from './mock';
-import type { User, UserSummary } from '@/types/user';
-import { RoleName } from '@/types/role';
-import { Pagination } from '@/types/pagination';
-import { DeleteAlert } from '@/components/delete-alert';
-import { deleteMethod } from '@/routes/dashboard/user';
-import UserHeaderSection from './components/user-header-section';
-import UserCardSummary from './components/user-card-summary';
-import UserToolbar from './components/user-toolbar';
-import UserTable from './components/user-table';
-import UserFormModal from './components/user-form-modal';
-import UserDeleteModal from './components/user-delete-modal';
+import { Head, router } from "@inertiajs/react";
+import { dashboard } from "@/routes";
+import dashboardRoutes from "@/routes/dashboard";
+import { useModal } from "@/hooks/use-modal";
+import { useQueryParams } from "@/hooks/use-query-params";
+import { queryMock, summaryMock } from "./mock";
+import type { User, UserSummary } from "@/types/user";
+import { RoleName } from "@/types/role";
+import { Pagination } from "@/types/pagination";
+import { DeleteAlert } from "@/components/delete-alert";
+import { deleteMethod } from "@/routes/dashboard/user";
+import UserHeaderSection from "./components/user-header-section";
+import UserCardSummary from "./components/user-card-summary";
+import UserToolbar from "./components/user-toolbar";
+import UserTable from "./components/user-table";
+import UserFormModal from "./components/user-form-modal";
+import UserDeleteModal from "./components/user-delete-modal";
 
 interface UserPageProps {
     data: Pagination<User>;
@@ -39,7 +39,11 @@ export default function UserPage({ data, roles, summary }: UserPageProps) {
     return (
         <>
             <Head title="Manajemen Pengguna & Staf" />
-            <UserFormModal roles={roles} modal={modal} />
+            <UserFormModal
+                key={modal.data?.id ?? "create"}
+                roles={roles}
+                modal={modal}
+            />
             <UserDeleteModal modal={modal} />
             <DeleteAlert
                 modal={modal}
@@ -73,11 +77,11 @@ export default function UserPage({ data, roles, summary }: UserPageProps) {
 UserPage.layout = {
     breadcrumbs: [
         {
-            title: 'Dashboard',
+            title: "Dashboard",
             href: dashboard(),
         },
         {
-            title: 'Manajemen Pengguna & Staf',
+            title: "Manajemen Pengguna & Staf",
             href: dashboardRoutes.user.index(),
         },
     ],

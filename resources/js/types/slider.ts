@@ -2,6 +2,7 @@ export interface Slider {
     id: number;
     title: string;
     subtitle?: string;
+    category: string;
     image_path: string;
     cta_text?: string;
     cta_url?: string;
